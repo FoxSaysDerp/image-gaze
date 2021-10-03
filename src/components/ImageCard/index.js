@@ -1,4 +1,5 @@
 import React from "react";
+import "./imagecard.scss";
 
 class ImageCard extends React.Component {
   constructor(props) {
