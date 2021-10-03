@@ -9,24 +9,25 @@ jobs:
         runs-on: ubuntu-latest
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         steps:
-            uses: actions/checkout@v2
-          - name: Create env file
-            run: |
-              touch .env
-              echo API_KEY=${{ secrets.API_KEY }} >> .env
-              cat .env
-          - name: Use Node.js ${{ matrix.node-version }}
-            uses: actions/setup-node@v2
-            with:
-              node-version: ${{ matrix.node-version }}
-              cache: 'npm'
-          - run: npm ci
-          - run: npm run build --if-present
-          - name: Deploy production to Netlify
-            uses: South-Paw/action-netlify-deploy@v1.2.0
-            with:
-              github-token: ${{ secrets.DEPLOY_GITHUB_TOKEN }}
-              netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-              netlify-site-id: ${{ secrets.NETLIFY_SITE_ID }}
-              build-dir: './build'
-              comment-on-commit: true
+        - name: Checkout repository
+          uses: actions/checkout@v1
+        - name: Create env file
+          run: |
+            touch .env
+            echo API_KEY=${{ secrets.API_KEY }} >> .env
+            cat .env
+        - name: Use Node.js ${{ matrix.node-version }}
+          uses: actions/setup-node@v2
+          with:
+            node-version: ${{ matrix.node-version }}
+            cache: 'npm'
+        - run: npm ci
+        - run: npm run build --if-present
+        - name: Deploy production to Netlify
+          uses: South-Paw/action-netlify-deploy@v1.2.0
+          with:
+            github-token: ${{ secrets.DEPLOY_GITHUB_TOKEN }}
+            netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+            netlify-site-id: ${{ secrets.NETLIFY_SITE_ID }}
+            build-dir: './build'
+            comment-on-commit: true
